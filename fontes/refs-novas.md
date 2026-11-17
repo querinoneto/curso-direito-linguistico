@@ -73,3 +73,8 @@ D: BAMGBOSE, Ayo. *Language and exclusion*: the consequences of language policie
 J: STF. Arguição de Descumprimento de Preceito Fundamental nº 709/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Luís Roberto Barroso. Julgada em 5 de agosto de 2020.
 J: STF. Ação Direta de Inconstitucionalidade nº 6.590/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Dias Toffoli. Julgada em 21 de dezembro de 2020. 2020b.
 J: STF. Arguição de Descumprimento de Preceito Fundamental nº 457/GO. Tribunal Pleno. Relator: Min. Alexandre de Moraes. Julgada em abril de 2020. 2020c.
+D: SHUY, Roger W. *Language crimes*: the use and abuse of language evidence in the courtroom. Oxford: Blackwell, 1993.
+D: ROSE, Phil. *Forensic speaker identification*. London: Taylor & Francis, 2002.
+J: CORTE INTERNACIONAL DE JUSTIÇA. LaGrand (Alemanha v. Estados Unidos da América). Sentença de 27 de junho de 2001.
+J: SUPREMA CORTE DOS ESTADOS UNIDOS. Smith v. United States, 508 U.S. 223 (1993). 1993b.
+J: SUPREMA CORTE DOS ESTADOS UNIDOS. Muscarello v. United States, 524 U.S. 125 (1998).
