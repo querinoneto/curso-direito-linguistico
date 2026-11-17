@@ -21,11 +21,11 @@ Exporta.pdf = (M) => {
   const font = (f, w, s) => `@font-face{font-family:Pagella;src:url(${base}fonts/${f}.otf);font-weight:${w};font-style:${s}}`;
   let toc = '', body = ''; FN_N = 0;
   M.parts.forEach(p => {
-    toc += `<li class="tp"><a href="#${p.id}"><span>Parte ${p.num} — ${p.title}</span></a></li>`;
-    body += `<section class="part" id="${p.id}"><div class="pnum">Parte ${p.num}</div><h1>${p.title}</h1></section>`;
+    toc += `<li class="tp"><a href="#${p.id}"><span>${p.label ? p.label + ' — ' : ''}${p.title}</span></a></li>`;
+    body += `<section class="part" id="${p.id}"><div class="pnum">${p.label}</div><h1>${p.title}</h1></section>`;
     p.chapters.forEach(c => {
-      toc += `<li class="tc"><a href="#${c.id}"><span>Capítulo ${c.num}. ${c.title}</span></a></li>`;
-      body += `<section class="chapter"><div class="cnum">Capítulo ${c.num}</div><h2 id="${c.id}">${c.title}</h2>`;
+      toc += `<li class="tc"><a href="#${c.id}"><span>${c.label}. ${c.title}</span></a></li>`;
+      body += `<section class="chapter"><div class="cnum">${c.label}</div><h2 id="${c.id}">${c.title}</h2>`;
       c.sections.forEach(s => {
         if (s.title) { toc += `<li class="ts"><a href="#${s.id}"><span>${s.num}. ${s.title}</span></a></li>`; body += `<h3 id="${s.id}">${s.num}. ${s.title}</h3>`; }
         body += pdfBody(s.html);
@@ -155,9 +155,9 @@ Exporta.docx = async (M) => {
   ch.push(new X.Paragraph({ pageBreakBefore: true, alignment: X.AlignmentType.CENTER, spacing: { after: 300 }, children: [new X.TextRun({ text: 'Sumário', bold: true, size: 30, font: FONT })] }));
   ch.push(new X.TableOfContents('Sumário', { hyperlink: true, headingStyleRange: '1-3' }));
   M.parts.forEach(p => {
-    ch.push(new X.Paragraph({ heading: X.HeadingLevel.HEADING_1, pageBreakBefore: true, spacing: { before: 3000 }, alignment: X.AlignmentType.CENTER, children: [new X.TextRun({ text: `Parte ${p.num}`, size: 26, smallCaps: true, font: FONT }), new X.TextRun({ text: p.titleText, break: 1, bold: true, size: 36, font: FONT })] }));
+    ch.push(new X.Paragraph({ heading: X.HeadingLevel.HEADING_1, pageBreakBefore: true, spacing: { before: 3000 }, alignment: X.AlignmentType.CENTER, children: [new X.TextRun({ text: `${p.label}`, size: 26, smallCaps: true, font: FONT }), new X.TextRun({ text: p.titleText, break: 1, bold: true, size: 36, font: FONT })] }));
     p.chapters.forEach(c => {
-      ch.push(new X.Paragraph({ heading: X.HeadingLevel.HEADING_2, pageBreakBefore: true, alignment: X.AlignmentType.CENTER, spacing: { before: 1200, after: 480 }, children: [new X.TextRun({ text: `Capítulo ${c.num}`, size: 22, smallCaps: true, font: FONT }), new X.TextRun({ text: c.titleText, break: 1, bold: true, size: 30, font: FONT })] }));
+      ch.push(new X.Paragraph({ heading: X.HeadingLevel.HEADING_2, pageBreakBefore: true, alignment: X.AlignmentType.CENTER, spacing: { before: 1200, after: 480 }, children: [new X.TextRun({ text: `${c.label}`, size: 22, smallCaps: true, font: FONT }), new X.TextRun({ text: c.titleText, break: 1, bold: true, size: 30, font: FONT })] }));
       c.sections.forEach(s => {
         if (s.title) { const h = document.createElement('div'); h.innerHTML = `${s.num}. ${s.title}`; ch.push(new X.Paragraph({ heading: X.HeadingLevel.HEADING_3, keepNext: true, spacing: { before: 360, after: 160 }, children: runs(h, { b: true, size: 23 }) })); }
         ch.push(...blocks(s.html));

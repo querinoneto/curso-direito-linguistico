@@ -18,3 +18,7 @@ Cada alteração é salva na hora no navegador (IndexedDB). Para não depender d
 
 1. **Sincronização com o GitHub** (botão *GitHub*): grava `data/livro.json` neste repositório. Requer um token de acesso pessoal com permissão *Contents: Read and write* apenas para este repositório.
 2. **Backup** (botão *Backup*): baixa um arquivo único com o livro e o histórico de versões.
+
+## Fontes do texto
+
+As Partes III a XII e os Apêndices foram redigidos em `fontes/*.md` (com as referências novas em `fontes/refs-novas.md`) e inseridos em `data/livro.json` por `ferramentas/gera_acrescimos.py`, que nunca altera as Partes I e II. Ao abrir o sistema num navegador que já tinha o livro salvo, as partes novas são acrescentadas automaticamente, sem mexer no que foi revisado.

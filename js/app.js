@@ -14,11 +14,17 @@ const editor = () => $('#editor');
 // ---------------- estrutura ----------------
 function order() {
   const out = []; let gc = 0;
-  D.parts.forEach((p, pi) => p.chapters.forEach((c) => { gc++; let n = 0; c.sections.forEach((s, si) => { if (!s.intro) n++; out.push({ p, c, s, pi, cn: gc, si, sn: s.intro ? 0 : n }); }); }));
+  const L = labels(); D.parts.forEach((p, pi) => p.chapters.forEach((c) => { gc++; let n = 0; c.sections.forEach((s, si) => { if (!s.intro) n++; out.push({ p, c, s, pi, cn: L.short[c.id], cg: gc, si, sn: s.intro ? 0 : n }); }); }));
   return out;
 }
 function find(id) { return order().find(o => o.s.id === id); }
-function chapterNums() { const m = {}; let n = 0; D.parts.forEach((p, pi) => { m[p.id] = U.roman(pi + 1); p.chapters.forEach(c => { m[c.id] = ++n; }); }); return m; }
+// Numeração: partes em romanos e capítulos corridos; a parte de apêndices (kind: 'apendices') não entra na contagem
+function chapterNums() { const m = {}; let n = 0, np = 0; D.parts.forEach(p => { if (p.kind === 'apendices') { m[p.id] = ''; p.chapters.forEach((c, i) => { m[c.id] = U.roman(i + 1); }); } else { m[p.id] = U.roman(++np); p.chapters.forEach(c => { m[c.id] = ++n; }); } }); return m; }
+function labels() {
+  const m = chapterNums(), part = {}, ch = {}, short = {};
+  D.parts.forEach(p => { const ap = p.kind === 'apendices'; part[p.id] = ap ? 'Apêndices' : `Parte ${m[p.id]}`; p.chapters.forEach(c => { ch[c.id] = ap ? `Apêndice ${m[c.id]}` : `Capítulo ${m[c.id]}`; short[c.id] = ap ? `Ap. ${m[c.id]}` : `Cap. ${m[c.id]}`; }); });
+  return { part, ch, short, nums: m };
+}
 const secLabel = s => s.intro ? 'Abertura do capítulo' : U.plain(s.title || '(sem título)');
 const WC = new Map();
 function words(s) { const c = WC.get(s.id); if (c && c.h === s.html) return c.w; const w = U.countWords(U.plain(s.html)); WC.set(s.id, { h: s.html, w }); return w; }
@@ -112,7 +118,7 @@ function openSection(id, opt = {}) {
   cur = id; localStorage.setItem('cdl-cur', id); selNote = -1; selComment = null;
   const s = o.s;
   const nums = chapterNums();
-  $('#crumb').innerHTML = `Parte ${nums[o.p.id]} · ${U.esc(U.plain(o.p.title))} › Capítulo ${o.cn} · ${U.esc(U.plain(o.c.title))}`;
+  const L = labels(); $('#crumb').innerHTML = `${o.p.kind === 'apendices' ? '' : L.part[o.p.id] + ' · '}${U.esc(U.plain(o.p.title))} › ${L.ch[o.c.id]} · ${U.esc(U.plain(o.c.title))}`;
   const t = $('#sectitle');
   if (s.intro) { t.textContent = 'Abertura do capítulo (texto antes da primeira seção)'; t.contentEditable = 'false'; t.className = 'intro'; }
   else { t.innerHTML = s.title; t.contentEditable = s.status === 'travado' ? 'false' : 'true'; t.className = ''; }
@@ -150,7 +156,7 @@ function nextToFix(fromId = cur) {
 function renderToc() {
   const nums = chapterNums(); let h = '';
   D.parts.forEach((p, pi) => {
-    h += `<div class="toc-part"><div class="row" data-part="${p.id}"><span class="t">Parte ${nums[p.id]} — ${p.title}</span><span class="acts"><button data-a="ren-part" title="Renomear">✎</button><button data-a="add-ch" title="Novo capítulo">+ cap.</button><button data-a="del-part" title="Excluir parte">✕</button></span></div>`;
+    h += `<div class="toc-part"><div class="row" data-part="${p.id}"><span class="t">${p.kind === 'apendices' ? '' : labels().part[p.id] + ' — '}${p.title}</span><span class="acts"><button data-a="ren-part" title="Renomear">✎</button><button data-a="add-ch" title="Novo capítulo">+ cap.</button><button data-a="del-part" title="Excluir parte">✕</button></span></div>`;
     p.chapters.forEach(c => {
       const st = { pendente: 0, revisao: 0, corrigido: 0, travado: 0 }; let tot = 0;
       c.sections.forEach(s => { const w = words(s); st[s.status] += w; tot += w; });
@@ -225,7 +231,7 @@ function showProgress() {
   h += `<p><b>Livro inteiro:</b> ${all.pct.toFixed(1)}% das palavras revisadas · ${all.ndone} de ${all.n} seções (${all.secs.revisao} em revisão, ${all.secs.pendente} pendentes).</p>${barHTML(all)}<br>`;
   D.parts.forEach(p => {
     const pr = stats(p.chapters.flatMap(c => c.sections));
-    h += `<h4>Parte ${nums[p.id]} — ${p.title} · ${pr.pct.toFixed(0)}%</h4><div class="stat-grid">`;
+    h += `<h4>${p.kind === 'apendices' ? '' : labels().part[p.id] + ' — '}${p.title} · ${pr.pct.toFixed(0)}%</h4><div class="stat-grid">`;
     p.chapters.forEach(c => { const cr = stats(c.sections); h += `<span>${nums[c.id]}. ${c.title}</span>${barHTML(cr)}<span class="muted">${cr.pct.toFixed(0)}% · ${cr.ndone}/${cr.n} seções · ${cr.tot.toLocaleString('pt-BR')} pal.</span>`; });
     h += `</div>`;
   });
@@ -291,7 +297,7 @@ function renderPanel() {
   if (tab === 'queue') {
     const ord = order(); const i = ord.findIndex(o => o.s.id === cur);
     const nexts = ord.slice(i + 1).filter(o => !DONE(o.s)).slice(0, 2);
-    const item = (o, cls, lbl) => `<div class="queue-item ${cls}" data-sec="${o.s.id}"><small>${lbl} · Cap. ${o.cn}${o.sn ? ', seção ' + o.sn : ''} · ${STATUS[o.s.status].label}</small><div><span class="dot ${o.s.status}" style="display:inline-block"></span> ${U.esc(secLabel(o.s))}</div><small>${words(o.s).toLocaleString('pt-BR')} palavras</small></div>`;
+    const item = (o, cls, lbl) => `<div class="queue-item ${cls}" data-sec="${o.s.id}"><small>${lbl} · ${o.cn}${o.sn ? ', seção ' + o.sn : ''} · ${STATUS[o.s.status].label}</small><div><span class="dot ${o.s.status}" style="display:inline-block"></span> ${U.esc(secLabel(o.s))}</div><small>${words(o.s).toLocaleString('pt-BR')} palavras</small></div>`;
     let h = `<h4>Agora</h4>` + item(ord[i], 'cur', 'Seção atual') + `<h4>A seguir</h4>`;
     h += nexts.length ? nexts.map((o, k) => item(o, '', k ? 'Depois' : 'Próxima')).join('') : '<p class="muted">Não há seções pendentes depois desta.</p>';
     const first = ord.find(o => !DONE(o.s));
@@ -415,7 +421,7 @@ function showHistory() {
     snapshot(s, 'Antes de restaurar versão anterior'); s.html = v.html; if (v.title && !s.intro) s.title = v.title; s.updated = Date.now(); pushUndo(s.id, s.html); touch(); closeModal(); openSection(s.id); U.toast('Versão restaurada.');
   });
 }
-async function loadOrig() { if (ORIG) return ORIG; try { const o = await (await fetch('data/original.json', { cache: 'force-cache' })).json(); ORIG = {}; o.parts.forEach(p => p.chapters.forEach(c => c.sections.forEach(s => ORIG[s.id] = s))); } catch { ORIG = {}; } return ORIG; }
+async function loadOrig() { if (ORIG) return ORIG; try { const o = await (await fetch('data/original.json', { cache: 'no-cache' })).json(); ORIG = {}; o.parts.forEach(p => p.chapters.forEach(c => c.sections.forEach(s => ORIG[s.id] = s))); } catch { ORIG = {}; } return ORIG; }
 async function showDiffOriginal() {
   commit(); const s = find(cur).s; const o = (await loadOrig())[s.id];
   if (!o) return modal('Comparar com o original', '<p>Esta seção não existia no texto importado.</p>');
@@ -475,7 +481,7 @@ function runSearch() {
   lastHits = searchAll(q, opts());
   $('#sInfo').textContent = `${lastHits.length} ocorrência(s)`;
   $('#sRep').disabled = !lastHits.length;
-  $('#sHits').innerHTML = lastHits.slice(0, 500).map((h, i) => `<div class="hit-row"><input type="checkbox" data-i="${i}" ${h.ob.s.status === 'travado' ? 'disabled title="Seção travada"' : 'checked'}><div style="flex:1;cursor:pointer" data-go="${i}"><small>Cap. ${h.ob.cn} · ${U.esc(secLabel(h.ob.s))}${h.ob.s.status === 'travado' ? ' · travada' : ''}</small>…${U.esc(h.ctx[0])}<mark class="hit">${U.esc(h.ctx[1])}</mark>${U.esc(h.ctx[2])}…</div></div>`).join('') + (lastHits.length > 500 ? '<p class="muted">Mostrando as 500 primeiras.</p>' : '');
+  $('#sHits').innerHTML = lastHits.slice(0, 500).map((h, i) => `<div class="hit-row"><input type="checkbox" data-i="${i}" ${h.ob.s.status === 'travado' ? 'disabled title="Seção travada"' : 'checked'}><div style="flex:1;cursor:pointer" data-go="${i}"><small>${h.ob.cn} · ${U.esc(secLabel(h.ob.s))}${h.ob.s.status === 'travado' ? ' · travada' : ''}</small>…${U.esc(h.ctx[0])}<mark class="hit">${U.esc(h.ctx[1])}</mark>${U.esc(h.ctx[2])}…</div></div>`).join('') + (lastHits.length > 500 ? '<p class="muted">Mostrando as 500 primeiras.</p>' : '');
   $('#sHits').querySelectorAll('[data-go]').forEach(el => el.onclick = () => { const h = lastHits[+el.dataset.go]; closeModal(); openSection(h.sec); setTimeout(() => reveal(h.m), 60); });
 }
 function doReplace() {
@@ -507,7 +513,7 @@ function showChecks() {
   const rows = order().map(o => { const a = Checks.authorsInBody(o.s.html, names), st = Checks.style(o.s.html); tA += a.length; tS += st.length; return { o, a, st }; }).filter(r => r.a.length || r.st.length);
   const by = (st, t) => st.filter(x => x.type === t).length;
   modal('Verificações do livro', `<p>${tA} menção(ões) a autores no corpo do texto · ${tS} alerta(s) de estilo. Clique numa linha para abrir a seção (os detalhes ficam na aba <b>Verificação</b> do painel).</p>
-  <table class="grid"><tr><th>Seção</th><th>Autores</th><th>Parág. curtos</th><th>Longos</th><th>Frases longas</th><th>Repetições</th><th>Listas</th></tr>${rows.map(r => `<tr class="clk" data-sec="${r.o.s.id}"><td><span class="dot ${r.o.s.status}" style="display:inline-block"></span> Cap. ${r.o.cn} · ${U.esc(secLabel(r.o.s))}</td><td>${r.a.length ? `<span class="badge warn">${r.a.length}</span> <small>${U.esc([...new Set(r.a.map(x => x.name))].join(', '))}</small>` : ''}</td><td>${by(r.st, 'curto') || ''}</td><td>${by(r.st, 'longo') || ''}</td><td>${by(r.st, 'frase') || ''}</td><td>${by(r.st, 'repeticao') || ''}</td><td>${by(r.st, 'lista') || ''}</td></tr>`).join('')}</table>
+  <table class="grid"><tr><th>Seção</th><th>Autores</th><th>Parág. curtos</th><th>Longos</th><th>Frases longas</th><th>Repetições</th><th>Listas</th></tr>${rows.map(r => `<tr class="clk" data-sec="${r.o.s.id}"><td><span class="dot ${r.o.s.status}" style="display:inline-block"></span> ${r.o.cn} · ${U.esc(secLabel(r.o.s))}</td><td>${r.a.length ? `<span class="badge warn">${r.a.length}</span> <small>${U.esc([...new Set(r.a.map(x => x.name))].join(', '))}</small>` : ''}</td><td>${by(r.st, 'curto') || ''}</td><td>${by(r.st, 'longo') || ''}</td><td>${by(r.st, 'frase') || ''}</td><td>${by(r.st, 'repeticao') || ''}</td><td>${by(r.st, 'lista') || ''}</td></tr>`).join('')}</table>
   <h4>Nomes ignorados</h4><p class="muted">${(D.ignoreNames || []).map(n => `${U.esc(n)} <a href="#" data-un="${U.esc(n)}">(voltar a verificar)</a>`).join(' · ') || 'nenhum'}</p>`);
   $('#modalbody').querySelectorAll('tr.clk').forEach(tr => tr.onclick = () => { closeModal(); openSection(tr.dataset.sec); setTab('checks'); });
   $('#modalbody').querySelectorAll('[data-un]').forEach(a => a.onclick = e => { e.preventDefault(); D.ignoreNames = D.ignoreNames.filter(n => n !== a.dataset.un); touch(); showChecks(); });
@@ -520,7 +526,7 @@ function showNorms(filter = 'todas') {
   const done = list.filter(n => chk[n.key]).length;
   modal('Normas, decisões e casos citados', `<p>${list.length} itens encontrados no texto e nas notas · ${done} conferidos. Marque cada um depois de conferir número, data e conteúdo na fonte oficial.</p>
   <div class="formrow"><label style="min-width:0">Mostrar:</label><select id="nF"><option value="todas">todos</option><option value="pendentes">só não conferidos</option><option value="ok">só conferidos</option></select></div>
-  <table class="grid"><tr><th style="width:30px">✓</th><th>Norma / decisão / caso</th><th>Onde aparece</th></tr>${shown.map(n => `<tr><td><input type="checkbox" data-k="${U.esc(n.key)}" ${chk[n.key] ? 'checked' : ''}></td><td>${U.esc(n.key)}</td><td>${[...new Map(n.occ.map(o => [o.sec, o])).values()].map(o => { const ob = find(o.sec); return `<a href="#" data-sec="${o.sec}" data-term="${U.esc(n.key)}" title="${U.esc(o.ctx)}">Cap. ${ob.cn}${ob.sn ? '.' + ob.sn : ''}</a>`; }).join(', ')}</td></tr>`).join('')}</table>`);
+  <table class="grid"><tr><th style="width:30px">✓</th><th>Norma / decisão / caso</th><th>Onde aparece</th></tr>${shown.map(n => `<tr><td><input type="checkbox" data-k="${U.esc(n.key)}" ${chk[n.key] ? 'checked' : ''}></td><td>${U.esc(n.key)}</td><td>${[...new Map(n.occ.map(o => [o.sec, o])).values()].map(o => { const ob = find(o.sec); return `<a href="#" data-sec="${o.sec}" data-term="${U.esc(n.key)}" title="${U.esc(o.ctx)}">${ob.cn}${ob.sn ? '.' + ob.sn : ''}</a>`; }).join(', ')}</td></tr>`).join('')}</table>`);
   $('#nF').value = filter; $('#nF').onchange = e => showNorms(e.target.value);
   $('#modalbody').querySelectorAll('[data-k]').forEach(c => c.onchange = () => { if (c.checked) chk[c.dataset.k] = new Date().toISOString(); else delete chk[c.dataset.k]; touch(); });
   $('#modalbody').querySelectorAll('[data-sec]').forEach(a => a.onclick = e => { e.preventDefault(); closeModal(); openSection(a.dataset.sec); setTimeout(() => reveal(a.dataset.term), 60); });
@@ -563,7 +569,7 @@ function showTodo(showResolved = false, q = '') {
   commit();
   const all = order().flatMap(o => (o.s.comments || []).map(c => ({ o, c }))).filter(x => (showResolved || !x.c.resolved) && (!q || (x.c.text + x.c.quote).toLowerCase().includes(q.toLowerCase())));
   modal('Pendências e comentários', `<div class="formrow"><input type="text" id="tdQ" placeholder="filtrar…" value="${U.esc(q)}"><label style="min-width:0"><input type="checkbox" id="tdR" ${showResolved ? 'checked' : ''}> mostrar resolvidos</label></div>
-  ${all.length ? `<table class="grid"><tr><th>Seção</th><th>Comentário</th><th></th></tr>${all.map(x => `<tr class="clk" data-sec="${x.o.s.id}" data-id="${x.c.id}"><td style="white-space:nowrap">Cap. ${x.o.cn}${x.o.sn ? '.' + x.o.sn : ''}<br><small class="muted">${U.esc(secLabel(x.o.s)).slice(0, 40)}</small></td><td>${x.c.quote ? `<small class="muted">“${U.esc(x.c.quote.slice(0, 120))}”</small><br>` : ''}${U.esc(x.c.text) || '<i class="muted">(sem texto)</i>'}</td><td>${x.c.resolved ? '<span class="badge ok">resolvido</span>' : ''}</td></tr>`).join('')}</table>` : '<p class="muted">Nenhuma pendência aberta.</p>'}`);
+  ${all.length ? `<table class="grid"><tr><th>Seção</th><th>Comentário</th><th></th></tr>${all.map(x => `<tr class="clk" data-sec="${x.o.s.id}" data-id="${x.c.id}"><td style="white-space:nowrap">${x.o.cn}${x.o.sn ? '.' + x.o.sn : ''}<br><small class="muted">${U.esc(secLabel(x.o.s)).slice(0, 40)}</small></td><td>${x.c.quote ? `<small class="muted">“${U.esc(x.c.quote.slice(0, 120))}”</small><br>` : ''}${U.esc(x.c.text) || '<i class="muted">(sem texto)</i>'}</td><td>${x.c.resolved ? '<span class="badge ok">resolvido</span>' : ''}</td></tr>`).join('')}</table>` : '<p class="muted">Nenhuma pendência aberta.</p>'}`);
   $('#tdQ').oninput = U.debounce(e => showTodo($('#tdR').checked, $('#tdQ').value), 300);
   $('#tdR').onchange = () => showTodo($('#tdR').checked, $('#tdQ').value);
   $('#modalbody').querySelectorAll('tr.clk').forEach(tr => tr.onclick = () => { closeModal(); openSection(tr.dataset.sec); selComment = tr.dataset.id; decorate(); setTab('comments'); });
@@ -575,7 +581,7 @@ function exportModel(scope, refsMode) {
   const nums = chapterNums(); const ord = order();
   const pick = s => scope === 'tudo' || (scope === 'corrigidas' && DONE(s)) || (scope === 'capitulo' && find(cur).c.sections.includes(s));
   const parts = D.parts.map(p => ({
-    id: p.id, num: nums[p.id], title: p.title, titleText: U.plain(p.title),
+    id: p.id, num: nums[p.id], label: p.kind === 'apendices' ? '' : labels().part[p.id], title: p.title, titleText: U.plain(p.title),
     chapters: p.chapters.map(c => {
       let n = 0;
       const sections = c.sections.map(s => { if (!s.intro) n++; return { s, num: n }; }).filter(x => pick(x.s)).map(x => {
@@ -584,7 +590,7 @@ function exportModel(scope, refsMode) {
         d.querySelectorAll('mark.cm').forEach(m => m.replaceWith(...m.childNodes));
         return { id: x.s.id, title: x.s.intro ? null : x.s.title, num: x.num, html: d.innerHTML };
       });
-      return { id: c.id, num: nums[c.id], title: c.title, titleText: U.plain(c.title), sections };
+      return { id: c.id, num: nums[c.id], label: labels().ch[c.id], title: c.title, titleText: U.plain(c.title), sections };
     }).filter(c => c.sections.length),
   })).filter(p => p.chapters.length);
   const idx = citationIndex(parts.flatMap(p => p.chapters.flatMap(c => c.sections)));
@@ -641,7 +647,7 @@ function showBackup() {
   };
   $('#bMd').onclick = () => {
     const nums = chapterNums(); let md = `# ${D.meta.title}\n\n`; let fnn = 0;
-    D.parts.forEach(p => { md += `# Parte ${nums[p.id]} — ${U.plain(p.title)}\n\n`; p.chapters.forEach(c => { md += `## Capítulo ${nums[c.id]}. ${U.plain(c.title)}\n\n`; let n = 0; c.sections.forEach(s => { if (!s.intro) md += `### ${++n}. ${U.plain(s.title).trim()}\n\n`; const d = document.createElement('div'); d.innerHTML = s.html; d.querySelectorAll('i').forEach(i => i.replaceWith('*' + i.textContent + '*')); d.querySelectorAll('.fn').forEach(f => f.replaceWith(`^[${f.dataset.note}]`)); d.querySelectorAll('.xref').forEach(x => { const t = x.dataset.target; x.replaceWith(/^p/.test(t) ? `Parte ${nums[t]}` : `Capítulo ${nums[t]}`); }); d.querySelectorAll('p').forEach(p => p.append('\n\n')); md += d.textContent.trim() + '\n\n'; }); }); });
+    D.parts.forEach(p => { const L = labels(); md += `# ${L.part[p.id]} — ${U.plain(p.title)}\n\n`; p.chapters.forEach(c => { md += `## ${L.ch[c.id]}. ${U.plain(c.title)}\n\n`; let n = 0; c.sections.forEach(s => { if (!s.intro) md += `### ${++n}. ${U.plain(s.title).trim()}\n\n`; const d = document.createElement('div'); d.innerHTML = s.html; d.querySelectorAll('i').forEach(i => i.replaceWith('*' + i.textContent + '*')); d.querySelectorAll('.fn').forEach(f => f.replaceWith(`^[${f.dataset.note}]`)); d.querySelectorAll('.xref').forEach(x => { const t = x.dataset.target; x.replaceWith(/^p/.test(t) ? `Parte ${nums[t]}` : `Capítulo ${nums[t]}`); }); d.querySelectorAll('p').forEach(p => p.append('\n\n')); md += d.textContent.trim() + '\n\n'; }); }); });
     download('curso-direito-linguistico.md', md, 'text/markdown');
   };
   const bt = $('#bTrash'); if (bt) bt.onclick = e => { e.preventDefault(); const it = D.trash.pop(); if (it.chapter) D.parts[D.parts.length - 1].chapters.push(it.chapter); else { const c = allChapters().find(c => c.id === it.chapter) || allChapters()[0]; c.sections.push(it.section); } touch(); closeModal(); renderToc(); renderProgress(); U.toast('Restaurado no fim do capítulo (ou da última parte).'); };
@@ -695,10 +701,24 @@ function boot2() {
   const lb = localStorage.getItem('cdl-lastbackup');
   if (!Sync.ok() && (!lb || Date.now() - new Date(lb) > 7 * 864e5)) setTimeout(() => U.toast('Lembrete: baixe um backup (botão Backup) ou ligue a sincronização com o GitHub.', 5000), 1500);
 }
+// Acrescenta ao livro salvo no navegador as partes novas publicadas no repositório (sem tocar nas existentes)
+function mergeSeed(R) {
+  const known = new Set(D.seedParts || D.parts.map(p => p.id)); const have = new Set(D.parts.map(p => p.id)); const added = [];
+  R.parts.forEach(p => { if (!have.has(p.id) && !known.has(p.id)) { D.parts.push(p); added.push(p); } });
+  if (added.length) ['doutrina', 'jurisprudencia'].forEach(g => { const ks = new Set(D.refs[g].map(r => U.refKey(r.html))); (R.refs[g] || []).forEach(r => { const k = U.refKey(r.html); if (!ks.has(k)) { D.refs[g].push(r); ks.add(k); } }); });
+  D.seedParts = [...new Set([...known, ...R.parts.map(p => p.id)])];
+  return added;
+}
 async function boot() {
   try {
     D = await DB.get('data');
     if (!D) { D = await (await fetch('data/livro.json', { cache: 'no-store' })).json(); await DB.set('data', D); }
+    else {
+      try {
+        const added = mergeSeed(await (await fetch('data/livro.json', { cache: 'no-store' })).json());
+        if (added.length) { await DB.set('data', D); setTimeout(() => U.toast(`Conteúdo novo acrescentado ao livro: ${added.map(p => U.plain(p.title)).join('; ')}.`, 6000), 800); }
+      } catch (e) { console.warn('Não foi possível verificar conteúdo novo:', e); }
+    }
     H = (await DB.get('history')) || {}; UNDO = (await DB.get('undo')) || {};
     boot2();
     if (Sync.ok()) {
