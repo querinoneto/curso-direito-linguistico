@@ -127,7 +127,7 @@ Quadro: Casos confirmados de cooficialização de línguas
 | Bonfim (RR) | Macuxi e wapixana | 2014 |
 | Estado do Amazonas | Dezesseis línguas indígenas, entre as quais apurinã, baniwa, nheengatu, tikuna, tukano e yanomami (Lei Estadual nº 6.303) | 2023 |
 
-Na elaboração de nova lei de cooficialização, recomenda-se observar a minuta proposta no Apêndice V e os critérios de efetividade discutidos no Capítulo 21: previsão de serviços concretos, prazos, dotação orçamentária, participação das comunidades de falantes e mecanismo de avaliação.
+Na elaboração de nova lei de cooficialização, recomenda-se observar os critérios de efetividade discutidos no Capítulo 21: previsão de serviços concretos, prazos, dotação orçamentária, participação das comunidades de falantes e mecanismo de avaliação.
 
 ## Jurisprudência selecionada
 
@@ -162,7 +162,7 @@ Quadro: Sistemas internacionais
 
 ## Modelos
 
-Os modelos a seguir destinam-se a orientar a prática e devem ser adaptados às circunstâncias de cada caso e às normas locais de organização judiciária e legislativa. As passagens entre colchetes indicam os dados a preencher.
+Os modelos a seguir destinam-se a orientar a prática e devem ser adaptados às circunstâncias de cada caso e às normas locais de organização judiciária. As passagens entre colchetes indicam os dados a preencher.
 
 ### Requerimento de nomeação de intérprete
 
@@ -187,18 +187,6 @@ Os modelos a seguir destinam-se a orientar a prática e devem ser adaptados às 
 > 4. Da tempestividade. A nulidade é arguida na primeira oportunidade em que a parte, assistida por intérprete ou por defesa técnica ciente do fato, pôde fazê-lo.
 > Ante o exposto, requer a declaração de nulidade dos atos indicados e dos que deles dependam, com sua renovação na presença de intérprete.
 > [Local e data]. [Advogado(a)], OAB/[UF] nº [...].
-
-### Minuta de lei municipal de cooficialização
-
-> LEI MUNICIPAL Nº [...], DE [...]
-> Dispõe sobre a cooficialização da língua [...] no Município de [...] e institui a política municipal de promoção dessa língua.
-> Art. 1º A língua [...] é declarada cooficial no Município de [...], sem prejuízo do estatuto da língua portuguesa como idioma oficial da República Federativa do Brasil.
-> Art. 2º O Município assegurará, no prazo de [...] anos: I - atendimento ao público na língua cooficial nos serviços de saúde, educação, assistência social e protocolo; II - publicação, também na língua cooficial, dos atos e comunicações de interesse geral; III - sinalização pública bilíngue; IV - oferta do ensino da língua cooficial nas escolas da rede municipal, conforme a demanda das famílias.
-> Art. 3º São válidos os requerimentos e as manifestações dirigidos à administração municipal na língua cooficial.
-> Art. 4º Fica criado o Conselho Municipal da Língua [...], com participação majoritária de representantes da comunidade de falantes, com atribuição de acompanhar a execução desta Lei e propor as medidas necessárias.
-> Art. 5º O Poder Executivo realizará, em até [...] meses, diagnóstico sociolinguístico do Município e apresentará plano de implementação com metas e indicadores.
-> Art. 6º As despesas decorrentes desta Lei correrão por conta de dotações orçamentárias próprias.
-> Art. 7º Esta Lei entra em vigor na data de sua publicação.
 
 ## Glossário jurídico-linguístico
 
