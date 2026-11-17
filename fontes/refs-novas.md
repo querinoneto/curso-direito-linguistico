@@ -72,4 +72,4 @@ J: CORTE IDH. Caso Povo Indígena Kichwa de Sarayaku vs. Equador. Mérito e repa
 D: BAMGBOSE, Ayo. *Language and exclusion*: the consequences of language policies in Africa. Hamburg: LIT, 2000.
 J: STF. Arguição de Descumprimento de Preceito Fundamental nº 709/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Luís Roberto Barroso. Julgada em 5 de agosto de 2020.
 J: STF. Ação Direta de Inconstitucionalidade nº 6.590/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Dias Toffoli. Julgada em 21 de dezembro de 2020. 2020b.
-J: STF. Arguição de Descumprimento de Preceito Fundamental nº 457/GO. Tribunal Pleno. Relator: Min. Alexandre de Moraes. Julgada em 27 de abril de 2020. 2020c.
+J: STF. Arguição de Descumprimento de Preceito Fundamental nº 457/GO. Tribunal Pleno. Relator: Min. Alexandre de Moraes. Julgada em abril de 2020. 2020c.
