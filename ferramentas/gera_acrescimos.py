@@ -86,6 +86,8 @@ for i, l in enumerate(open(os.path.join(RAIZ, 'fontes', 'refs-novas.md'), encodi
     if l.startswith('D: '): refs['doutrina'].append({'id': 'rn-d%03d' % i, 'html': titulo(l[3:])})
     elif l.startswith('J: '): refs['jurisprudencia'].append({'id': 'rn-j%03d' % i, 'html': titulo(l[3:])})
 
+import hashlib
+for p in novas: p['rev'] = hashlib.sha1(json.dumps(p['chapters'], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:10]
 ids = {p['id'] for p in novas}
 for nome in ('livro.json', 'original.json'):
     path = os.path.join(RAIZ, 'data', nome)

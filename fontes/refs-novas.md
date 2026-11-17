@@ -56,3 +56,17 @@ J: TJUE. Groener, Processo C-379/87. Acórdão de 28 de novembro de 1989.
 J: TJUE. Bickel e Franz, Processo C-274/96. Acórdão de 24 de novembro de 1998.
 J: TJUE. Runevič-Vardyn e Wardyn, Processo C-391/09. Acórdão de 12 de maio de 2011.
 J: TRIBUNAL CONSTITUCIONAL DA ESPANHA. Sentença nº 31/2010, de 28 de junho.
+D: NOWAK, Manfred. *U.N. Covenant on Civil and Political Rights*: CCPR commentary. 2. ed. Kehl: N. P. Engel, 2005.
+J: COMITÊ DE DIREITOS HUMANOS. Comentário Geral nº 32: art. 14 (direito à igualdade perante cortes e tribunais e a um julgamento justo). 2007.
+J: COMITÊ DE DIREITOS HUMANOS. Comentário Geral nº 34: art. 19 (liberdade de opinião e de expressão). 2011.
+J: CDESC (Comitê de Direitos Econômicos, Sociais e Culturais). Comentário Geral nº 13: direito à educação (art. 13 do Pacto). 1999.
+J: COMITÊ PARA A ELIMINAÇÃO DA DISCRIMINAÇÃO RACIAL. Recomendação Geral nº 23: direitos dos povos indígenas. 1997.
+J: COMITÊ DOS DIREITOS DA CRIANÇA. Comentário Geral nº 11: crianças indígenas e seus direitos nos termos da Convenção. 2009.
+J: COMITÊ SOBRE OS DIREITOS DAS PESSOAS COM DEFICIÊNCIA. Comentário Geral nº 4: direito à educação inclusiva. 2016.
+D: UNESCO. *The use of vernacular languages in education*. Paris: UNESCO, 1953.
+D: UNESCO. *Education in a multilingual world*: UNESCO education position paper. Paris: UNESCO, 2003. 2003b.
+J: STF. Ação Direta de Inconstitucionalidade nº 3.239/DF. Tribunal Pleno. Relatora para o acórdão: Min. Rosa Weber. Julgada em 8 de fevereiro de 2018. 2018b.
+J: CORTE IDH. Opinião Consultiva OC-16/99: o direito à informação sobre a assistência consular no âmbito das garantias do devido processo legal. 1º de outubro de 1999.
+J: CORTE IDH. Caso Almonacid Arellano e outros vs. Chile. Exceções preliminares, mérito, reparações e custas. Sentença de 26 de setembro de 2006. Série C, nº 154. 2006b.
+J: CORTE IDH. Caso Povo Indígena Kichwa de Sarayaku vs. Equador. Mérito e reparações. Sentença de 27 de junho de 2012. Série C, nº 245.
+D: BAMGBOSE, Ayo. *Language and exclusion*: the consequences of language policies in Africa. Hamburg: LIT, 2000.

@@ -705,6 +705,16 @@ function boot2() {
 function mergeSeed(R) {
   const known = new Set(D.seedParts || D.parts.map(p => p.id)); const have = new Set(D.parts.map(p => p.id)); const added = [];
   R.parts.forEach(p => { if (!have.has(p.id) && !known.has(p.id)) { D.parts.push(p); added.push(p); } });
+  // nova versão de uma parte já existente: substitui só as seções ainda pendentes e sem comentários
+  R.parts.forEach(rp => {
+    const lp = D.parts.find(p => p.id === rp.id); if (!lp || !rp.rev || lp.rev === rp.rev || added.includes(rp)) return;
+    const locals = new Map(); lp.chapters.forEach(c => c.sections.forEach(s => locals.set(s.id, s)));
+    const keep = s => s && (s.status !== 'pendente' || (s.comments || []).length);
+    const rids = new Set();
+    lp.chapters = rp.chapters.map(rc => { const lc = lp.chapters.find(c => c.id === rc.id); return { ...rc, sections: rc.sections.map(rs => { rids.add(rs.id); const ls = locals.get(rs.id); return keep(ls) ? ls : rs; }) }; });
+    locals.forEach((ls, id) => { if (!rids.has(id) && keep(ls)) { const c = lp.chapters[lp.chapters.length - 1]; if (c) c.sections.push(ls); } });
+    lp.title = rp.title; lp.rev = rp.rev; added.push({ title: rp.title + ' (versão revista)' });
+  });
   if (added.length) ['doutrina', 'jurisprudencia'].forEach(g => { const ks = new Set(D.refs[g].map(r => U.refKey(r.html))); (R.refs[g] || []).forEach(r => { const k = U.refKey(r.html); if (!ks.has(k)) { D.refs[g].push(r); ks.add(k); } }); });
   D.seedParts = [...new Set([...known, ...R.parts.map(p => p.id)])];
   return added;
