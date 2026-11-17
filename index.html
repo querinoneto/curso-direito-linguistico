@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Curso de Direito Linguístico — Revisão</title>
+<link rel="stylesheet" href="css/app.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%237a2e1f%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22serif%22%3E§%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <button class="ghost" id="btnSide" title="Mostrar/ocultar sumário">☰</button>
+    <span class="brand">Curso de Direito Linguístico</span>
+    <button class="primary" id="btnNext" title="Ir para a próxima seção a corrigir (Alt+N)">Próxima a corrigir →</button>
+    <button id="btnProgress">Progresso</button>
+    <button id="btnSearch" title="Ctrl+Shift+F">Buscar e substituir</button>
+    <button id="btnChecks">Verificações</button>
+    <button id="btnNorms">Normas citadas</button>
+    <button id="btnRefs">Referências</button>
+    <button id="btnTodo">Pendências</button>
+    <button id="btnExport">Exportar</button>
+    <button id="btnBackup">Backup</button>
+    <button id="btnSync">GitHub</button>
+    <span class="spacer"></span>
+    <span id="savestate">Carregando…</span>
+    <button class="ghost" id="btnPanel" title="Mostrar/ocultar painel">◧</button>
+  </header>
+  <div id="main">
+    <aside id="sidebar">
+      <div class="prog" id="progbox"></div>
+      <div id="toc"></div>
+    </aside>
+    <section id="center">
+      <div id="sechead">
+        <div id="crumb"></div>
+        <div id="statusbar"></div>
+        <div id="toolbar">
+          <button data-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button>
+          <button data-cmd="bold" title="Negrito (Ctrl+B)"><b>N</b></button>
+          <button data-cmd="note" title="Inserir nota de rodapé (Ctrl+Alt+N)">¹ Nota</button>
+          <button data-cmd="comment" title="Comentar o trecho selecionado (Ctrl+Alt+M)">💬 Comentar</button>
+          <button data-cmd="quote" title="Citação longa em bloco">❝ Citação</button>
+          <button data-cmd="plain" title="Remover formatação do trecho">Tx</button>
+          <span class="sep"></span>
+          <button data-cmd="undo" title="Desfazer (Ctrl+Z)">↶</button>
+          <button data-cmd="redo" title="Refazer (Ctrl+Y)">↷</button>
+          <span class="sep"></span>
+          <button data-cmd="snapshot" title="Guardar uma versão nomeada desta seção">Marcar versão</button>
+          <button data-cmd="history">Histórico</button>
+          <button data-cmd="diff" title="Comparar com o texto importado em 17/11/2026">Comparar com original</button>
+        </div>
+      </div>
+      <div id="paper">
+        <h2 id="sectitle" contenteditable="true" spellcheck="true"></h2>
+        <div id="editor" contenteditable="true" spellcheck="true" lang="pt-BR"></div>
+      </div>
+    </section>
+    <aside id="panel">
+      <div class="tabs">
+        <button data-tab="notes" class="on">Notas</button>
+        <button data-tab="comments">Comentários</button>
+        <button data-tab="checks">Verificação</button>
+        <button data-tab="queue">Fila</button>
+      </div>
+      <div class="pane" id="pane"></div>
+    </aside>
+  </div>
+</div>
+<div id="modal" class="hidden"><div id="modalbox"><div id="modalhead"><h2 id="modaltitle"></h2><button class="ghost" id="modalclose">✕</button></div><div id="modalbody"></div></div></div>
+<script src="js/db.js"></script>
+<script src="js/util.js"></script>
+<script src="js/checks.js"></script>
+<script src="js/exporta.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
