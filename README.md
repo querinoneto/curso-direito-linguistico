@@ -12,6 +12,10 @@ Página web para revisar o livro *Curso de Direito Linguístico*, de José Queri
 - `fonts/`: TeX Gyre Pagella (licença GUST), a fonte do livro.
 - `lib/`: Paged.js (MIT), para o PDF, e docx (MIT), para o Word.
 
+## Conferência de fontes
+
+O botão **Conferir fontes** lista cada citação das notas com a afirmação que ela sustenta no texto e a referência completa, com links para abrir ou buscar a fonte (Google Livros, Google Acadêmico, Internet Archive e o repositório oficial de cada tribunal ou organismo). Cada citação pode ser marcada como *confere*, *confere em parte* ou *não confere*, com observação. Os registros ficam em `verif`, dentro de `data/livro.json`, sem alterar o texto. Se a afirmação for reescrita, a citação volta a “a conferir”. O endereço de cada fonte pode ser guardado na própria referência (“+ link da fonte”).
+
 ## Onde ficam os dados
 
 Cada alteração é salva na hora no navegador (IndexedDB). Para não depender de um único aparelho:

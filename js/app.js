@@ -100,7 +100,7 @@ function undoRedo(dir) {
 function decorate() {
   const ed = editor(); if (!cur) return;
   let n = noteStart(cur);
-  ed.querySelectorAll('.fn').forEach((f, i) => { f.contentEditable = 'false'; f.dataset.n = n + i; f.classList.toggle('empty', !f.dataset.note); f.classList.toggle('sel', i === selNote); f.title = f.dataset.note || '(nota vazia)'; });
+  ed.querySelectorAll('.fn').forEach((f, i) => { f.contentEditable = 'false'; f.dataset.n = n + i; f.classList.toggle('empty', !f.dataset.note); f.classList.toggle('sel', i === selNote); f.title = f.dataset.note || '(nota vazia)'; const st = CF.noteStatus({ id: cur }, f); ['ok', 'part', 'no'].forEach(k => f.classList.toggle('ck-' + k, st === k)); });
   const nums = chapterNums();
   ed.querySelectorAll('.xref').forEach(x => {
     x.contentEditable = 'false'; const t = x.dataset.target;
@@ -248,9 +248,10 @@ function renderPanel() {
   if (!cur) return; const s = find(cur).s; const pane = $('#pane');
   if (tab === 'notes') {
     const fns = [...editor().querySelectorAll('.fn')];
-    let h = `<div class="muted" style="margin-bottom:10px;font-size:12px">Notas desta seção. Clique numa nota no texto para editá-la aqui. Use <b>¹ Nota</b> (Ctrl+Alt+N) para inserir.</div>`;
+    const RI = CF.refIndex(), CFI = CF.items(s, editor());
+    let h = `<div class="muted" style="margin-bottom:10px;font-size:12px">Notas desta seção. Clique numa nota para conferir a fonte. Clique numa nota no texto para editá-la aqui. Use <b>¹ Nota</b> (Ctrl+Alt+N) para inserir.</div>`;
     if (!fns.length) h += `<p class="muted">Nenhuma nota nesta seção.</p>`;
-    h += fns.map((f, i) => `<div class="note-item ${i === selNote ? 'sel' : ''}" data-i="${i}"><span class="n">${f.dataset.n}</span><input type="text" list="citlist" value="${U.esc(f.dataset.note || '')}" placeholder="AUTOR, ano." ${s.status === 'travado' ? 'disabled' : ''}><button title="Localizar no texto" data-go>⌖</button>${s.status === 'travado' ? '' : '<button title="Excluir nota" data-del>✕</button>'}</div>`).join('');
+    h += fns.map((f, i) => `<div class="note-item ${i === selNote ? 'sel' : ''}" data-i="${i}"><span class="n">${f.dataset.n}</span><input type="text" list="citlist" value="${U.esc(f.dataset.note || '')}" placeholder="AUTOR, ano." ${s.status === 'travado' ? 'disabled' : ''}><button title="Localizar no texto" data-go>⌖</button>${s.status === 'travado' ? '' : '<button title="Excluir nota" data-del>✕</button>'}</div>${i === selNote ? `<div class="cf-wrap">${CFI.filter(x => x.ni === i).map(x => CF.block(x, RI)).join('') || '<small class="muted">Nota sem citação no formato AUTOR, ano.</small>'}</div>` : ''}`).join('');
     const keys = [...new Set([...D.refs.doutrina, ...D.refs.jurisprudencia].map(r => { const [a, y] = U.refKey(r.html).split('|'); return `${a}, ${y}.`; }))];
     h += `<datalist id="citlist">${keys.map(k => `<option value="${U.esc(k)}">`).join('')}</datalist>`;
     const cits = fns.flatMap(f => U.citations(f.dataset.note || '')); const known = refKeySet();
@@ -265,6 +266,8 @@ function renderPanel() {
       it.querySelector('[data-go]').onclick = () => { f.scrollIntoView({ block: 'center', behavior: 'smooth' }); selNote = i; decorate(); };
       const del = it.querySelector('[data-del]'); if (del) del.onclick = () => { if (!confirm('Excluir esta nota?')) return; f.remove(); selNote = -1; commit(); renderPanel(); };
     });
+    CF.wire(pane, CFI, RI, () => { decorate(); renderPanel(); });
+    pane.querySelectorAll('.note-item').forEach(it => { const i = +it.dataset.i; const st = CF.noteStatus(s, fns[i]); if (st) it.querySelector('.n').insertAdjacentHTML('beforeend', `<span class="ckdot ck-${st}" title="${CK[st].label}">${CK[st].ic}</span>`); it.querySelector('.n').onclick = () => { selNote = i; decorate(); renderPanel(); }; });
     const or = $('#openRefs'); if (or) or.onclick = e => { e.preventDefault(); showRefs(); };
     if (selNote >= 0) { const it = pane.querySelector(`.note-item[data-i="${selNote}"] input`); if (it) { it.scrollIntoView({ block: 'nearest' }); } }
   }
@@ -549,7 +552,7 @@ function showRefs(group = 'doutrina') {
   h += `<p class="muted" style="font-size:12px">A lista se ordena sozinha. Cada entrada é ligada às notas pela chave <b>SOBRENOME, ano</b> (ex.: TURI, 1990). Ao exportar, por padrão saem só as obras citadas. Edite direto no texto (Ctrl+I para itálico).</p>`;
   if (missing.length) h += `<div class="issue"><b>${missing.length} citação(ões) nas notas sem entrada na lista</b>${missing.map(([k, v]) => `<div style="margin-top:4px">${U.esc(v.label)} <small class="muted">(${v.secs.length} nota(s))</small> <a href="#" data-mk="${U.esc(k)}" data-lbl="${U.esc(v.label)}">criar entrada</a> · <a href="#" data-gosec="${v.secs[0]}" data-term="${U.esc(v.label.split(',')[0])}">ver nota</a></div>`).join('')}</div>`;
   if (uncited) h += `<p class="muted">${uncited} entrada(s) desta lista não são citadas em nenhuma nota (marcadas abaixo).</p>`;
-  h += L.map((r, i) => { const k = U.refKey(r.html); const c = idx.get(k); return `<div class="refrow" data-i="${i}"><div class="txt" contenteditable="true">${r.html}</div>${c ? `<span class="badge ok" title="${U.esc(k)}">citada ${c.secs.length}×</span>` : `<span class="badge warn" title="Chave: ${U.esc(k)}">não citada</span>`}<button data-del title="Excluir">✕</button></div>`; }).join('');
+  h += L.map((r, i) => { const k = U.refKey(r.html); const c = idx.get(k); return `<div class="refrow" data-i="${i}"><div class="txt" contenteditable="true">${r.html}</div>${c ? `<a href="#" class="badge ok" data-cf="${U.esc(c.label)}" title="Conferir as passagens que citam esta obra">citada ${c.secs.length}× · conferir</a>` : `<span class="badge warn" title="Chave: ${U.esc(k)}">não citada</span>`}<button data-del title="Excluir">✕</button><div class="cf-links" style="flex-basis:100%">${CF.links(r, group)}<a href="#" class="lk" data-url>${r.url ? 'alterar link' : '+ link da fonte'}</a></div></div>`; }).join('');
   modal('Referências', h);
   const body = $('#modalbody');
   body.querySelectorAll('[data-g]').forEach(b => b.onclick = () => showRefs(b.dataset.g));
@@ -557,6 +560,8 @@ function showRefs(group = 'doutrina') {
     const r = L[+row.dataset.i]; const t = row.querySelector('.txt');
     t.onblur = () => { const nh = U.cleanHTML(t).replace(/^<p>|<\/p>$/g, ''); if (nh !== r.html) { r.html = nh; touch(); } };
     t.onkeydown = e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') { e.preventDefault(); document.execCommand('italic'); } if (e.key === 'Enter') { e.preventDefault(); t.blur(); } };
+    const cf = row.querySelector('[data-cf]'); if (cf) cf.onclick = e => { e.preventDefault(); showConfere('todos', cf.dataset.cf.split(',')[0]); };
+    row.querySelector('[data-url]').onclick = e => { e.preventDefault(); const n = prompt('Endereço da fonte (página do livro, PDF, acórdão…). Deixe em branco para remover.', r.url || ''); if (n === null) return; if (n.trim()) r.url = n.trim(); else delete r.url; touch(); showRefs(group); };
     row.querySelector('[data-del]').onclick = () => { if (!confirm('Excluir esta referência?')) return; L.splice(L.indexOf(r), 1); touch(); showRefs(group); };
   });
   $('#rAdd').onclick = () => { L.unshift({ id: U.uid('r'), html: 'SOBRENOME, Nome. <i>Título da obra</i>. Cidade: Editora, ano.' }); touch(); showRefs(group); setTimeout(() => body.querySelector('.refrow .txt').focus(), 30); };
@@ -681,6 +686,7 @@ $('#btnSearch').onclick = showSearch;
 $('#btnChecks').onclick = showChecks;
 $('#btnNorms').onclick = () => showNorms();
 $('#btnRefs').onclick = () => showRefs();
+$('#btnConf').onclick = () => showConfere();
 $('#btnTodo').onclick = () => showTodo();
 $('#btnExport').onclick = showExport;
 $('#btnBackup').onclick = showBackup;

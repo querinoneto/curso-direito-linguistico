@@ -139,7 +139,7 @@ table.grid{border-collapse:collapse;width:100%;font-size:13px}
 table.grid th,table.grid td{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
 table.grid tr.clk{cursor:pointer}
 table.grid tr.clk:hover{background:#f3efe6}
-.refrow{display:flex;gap:6px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line)}
+.refrow{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line)}
 .refrow .txt{flex:1;font-family:var(--serif);font-size:14px;outline:none;padding:3px 5px;border-radius:4px}
 .refrow .txt:focus{background:#fff;box-shadow:0 0 0 1px var(--line)}
 .badge{font-size:11px;border-radius:10px;padding:1px 7px;background:#ece7dc;color:var(--muted);white-space:nowrap}
@@ -160,3 +160,26 @@ table.grid tr.clk:hover{background:#f3efe6}
 #topbar button{padding:4px 8px;font-size:13px}
 #topbar{gap:4px;flex-wrap:nowrap;overflow-x:auto}
 .cm-item textarea{min-height:76px}
+/* conferência de fontes */
+.fn.ck-ok::after{background:#2b8a3e;color:#fff}
+.fn.ck-part::after{background:#e8a33d;color:#fff}
+.fn.ck-no::after{background:#c0392b;color:#fff}
+.ckdot{display:inline-block;margin-left:3px;font-size:11px}
+.note-item .n{cursor:pointer}
+.ck-ok{color:#2b8a3e}.ck-part{color:#b7791f}.ck-no{color:#c0392b}.ck-pend{color:var(--muted)}
+.cf-wrap{margin:-2px 0 12px 30px}
+.cf{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;padding:8px 10px;margin-bottom:10px;background:#fffdf8;font-size:13px}
+.cf-where{font-size:12px;margin-bottom:4px}
+.cf-claim{font-family:var(--serif);font-size:14px;margin-bottom:6px}
+.cf-ref{font-family:var(--serif);font-size:13px;margin-bottom:6px}
+.cf-links{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.cf-links .lk{font-size:12px;padding:2px 8px;border:1px solid var(--line);border-radius:12px;text-decoration:none;background:#fff}
+.cf-links .lk.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cf-st{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.cf-st .ck{font-size:12px;padding:2px 8px}
+.cf-st .ck.on.ck-ok{background:#d6f0d9;border-color:#2b8a3e}
+.cf-st .ck.on.ck-part{background:#fbecd0;border-color:#e8a33d}
+.cf-st .ck.on.ck-no{background:#f6d4cc;border-color:#c0392b}
+.cf-obs{width:100%;font-size:12px}
+.cf-sum{margin:6px 0 10px}
+a.badge{text-decoration:none}
