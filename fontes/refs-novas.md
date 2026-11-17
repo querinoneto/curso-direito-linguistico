@@ -80,3 +80,8 @@ J: SUPREMA CORTE DOS ESTADOS UNIDOS. Smith v. United States, 508 U.S. 223 (1993)
 J: SUPREMA CORTE DOS ESTADOS UNIDOS. Muscarello v. United States, 524 U.S. 125 (1998).
 D: UNESCO. *Recomendação sobre a ética da inteligência artificial*. Paris: UNESCO, 2021.
 J: STF. Recursos Extraordinários nº 1.037.396/SP e nº 1.057.258/MG (Temas 987 e 533 da repercussão geral). Tribunal Pleno. Julgados em 26 de junho de 2025.
+J: TEDH. Caso relativo a certos aspectos das leis sobre o uso das línguas no ensino na Bélgica v. Bélgica. Sentença de 23 de julho de 1968.
+J: SUPREMA CORTE DO CANADÁ. Ford v. Quebec (Attorney General), [1988] 2 S.C.R. 712. Julgado em 15 de dezembro de 1988.
+J: COMITÊ DE DIREITOS HUMANOS. Ballantyne, Davidson e McIntyre v. Canadá. Comunicações nº 359/1989 e nº 385/1989. Parecer adotado em 31 de março de 1993.
+J: SUPREMA CORTE DOS ESTADOS UNIDOS. Meyer v. Nebraska, 262 U.S. 390. Julgado em 4 de junho de 1923.
+J: SUPREMA CORTE DOS ESTADOS UNIDOS. Lau v. Nichols, 414 U.S. 563. Julgado em 21 de janeiro de 1974.
