@@ -70,3 +70,5 @@ J: CORTE IDH. Opinião Consultiva OC-16/99: o direito à informação sobre a as
 J: CORTE IDH. Caso Almonacid Arellano e outros vs. Chile. Exceções preliminares, mérito, reparações e custas. Sentença de 26 de setembro de 2006. Série C, nº 154. 2006b.
 J: CORTE IDH. Caso Povo Indígena Kichwa de Sarayaku vs. Equador. Mérito e reparações. Sentença de 27 de junho de 2012. Série C, nº 245.
 D: BAMGBOSE, Ayo. *Language and exclusion*: the consequences of language policies in Africa. Hamburg: LIT, 2000.
+J: STF. Arguição de Descumprimento de Preceito Fundamental nº 709/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Luís Roberto Barroso. Julgada em 5 de agosto de 2020.
+J: STF. Ação Direta de Inconstitucionalidade nº 6.590/DF (referendo de medida cautelar). Tribunal Pleno. Relator: Min. Dias Toffoli. Julgada em 21 de dezembro de 2020. 2020b.
