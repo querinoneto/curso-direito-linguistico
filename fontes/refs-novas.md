@@ -78,3 +78,5 @@ D: ROSE, Phil. *Forensic speaker identification*. London: Taylor & Francis, 2002
 J: CORTE INTERNACIONAL DE JUSTIÇA. LaGrand (Alemanha v. Estados Unidos da América). Sentença de 27 de junho de 2001.
 J: SUPREMA CORTE DOS ESTADOS UNIDOS. Smith v. United States, 508 U.S. 223 (1993). 1993b.
 J: SUPREMA CORTE DOS ESTADOS UNIDOS. Muscarello v. United States, 524 U.S. 125 (1998).
+D: UNESCO. *Recomendação sobre a ética da inteligência artificial*. Paris: UNESCO, 2021.
+J: STF. Recursos Extraordinários nº 1.037.396/SP e nº 1.057.258/MG (Temas 987 e 533 da repercussão geral). Tribunal Pleno. Julgados em 26 de junho de 2025.
